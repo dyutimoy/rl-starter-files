@@ -23,7 +23,7 @@ parser.add_argument("--pause", type=float, default=0.1,
                     help="pause duration between two consequent actions of the agent (default: 0.1)")
 parser.add_argument("--gif", type=str, default=None,
                     help="store output as gif with the given filename")
-parser.add_argument("--episodes", type=int, default=1000000,
+parser.add_argument("--episodes", type=int, default=1,
                     help="number of episodes to visualize")
 parser.add_argument("--memory", action="store_true", default=False,
                     help="add a LSTM to the model")
@@ -63,20 +63,22 @@ if args.gif:
 
 # Create a window to view the environment
 env.render('human')
-
+frame_val=0
 for episode in range(args.episodes):
     obs = env.reset()
-
+    print(episode)
     while True:
         env.render('human')
         if args.gif:
+            frame_val+=1
+            print(frame_val)
             frames.append(numpy.moveaxis(env.render("rgb_array"), 2, 0))
 
         action = agent.get_action(obs)
         obs, reward, done, _ = env.step(action)
         agent.analyze_feedback(reward, done)
 
-        if done or env.window.closed:
+        if done or env.window.closed :
             break
 
     if env.window.closed:
